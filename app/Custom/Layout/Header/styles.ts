@@ -3,11 +3,14 @@ import { theme } from '../../theme'
 
 export const HeaderNavStyled = styled.nav`
   display: none;
+  min-width: 0;
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  padding: 20px 24px 28px;
+  padding: 12px 16px;
+  max-height: calc(100dvh - 53px);
+  overflow-y: auto;
   background: ${theme.backgrounds.page};
   box-shadow: 0 16px 24px #182e2012;
   border-bottom: 1px solid ${theme.colors.border};
@@ -23,12 +26,14 @@ export const HeaderNavStyled = styled.nav`
     box-shadow: none;
     border-bottom: 0;
     align-items: center;
-    gap: 20px;
-    width: 100%;
+    gap: 12px;
+    flex: 1;
+    max-height: none;
+    overflow: visible;
   }
 
   @media (min-width: ${theme.breakpoints.md}px) {
-    gap: 32px;
+    gap: 16px;
   }
 
   &[data-open='true'] {
@@ -53,6 +58,7 @@ export const HeaderNavStyled = styled.nav`
 `
 
 export const HeaderStyled = styled.header`
+  flex-shrink: 0;
   position: sticky;
   top: 0;
   z-index: 300;
@@ -61,26 +67,40 @@ export const HeaderStyled = styled.header`
   .header-inner {
     max-width: 1328px;
     margin: auto;
-    min-height: 80px;
-    padding: 16px;
+    min-height: 52px;
+    padding: 8px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
 
     @media (min-width: ${theme.breakpoints.xs}px) {
-      padding: 16px 24px;
-      gap: 32px;
+      padding: 8px 24px;
+      gap: 16px;
     }
 
     @media (min-width: ${theme.breakpoints.sm}px) {
-      min-height: 96px;
-      padding: 18px 40px;
+      padding: 8px 32px;
     }
   }
 
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .brand img {
+    display: block;
+  }
+
   nav .ai-button {
-    padding: 10px 16px;
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 13px;
     line-height: inherit;
     justify-content: center;
 
@@ -93,8 +113,9 @@ export const HeaderStyled = styled.header`
     background: transparent;
     border: 1px solid ${theme.colors.border};
     border-radius: 10px;
-    width: 44px;
-    height: 44px;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     color: inherit;
@@ -109,13 +130,14 @@ export const HeaderStyled = styled.header`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 42px;
-    padding: 10px 16px;
+    min-height: 34px;
+    padding: 6px 12px;
     border: 1px solid ${theme.colors.border};
     border-radius: 10px;
     color: ${theme.colors.text.primary};
     background: white;
     font: inherit;
+    font-size: 13px;
     font-weight: 700;
     text-decoration: none;
     cursor: pointer;
@@ -146,6 +168,7 @@ export const HeaderStyled = styled.header`
     background: #eef1e9;
   }
   .account-name {
+    min-width: 0;
     max-width: 140px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -162,7 +185,7 @@ export const HeaderStyled = styled.header`
     border-radius: 12px;
     background: white;
     box-shadow: 0 12px 32px #1d30251a;
-    min-width: 220px;
+    min-width: min(220px, 100%);
     @media (min-width: ${theme.breakpoints.sm}px) {
       position: absolute;
       right: 0;

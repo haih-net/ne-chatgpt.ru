@@ -107,6 +107,10 @@ export const Header: React.FC = () => {
   return (
     <HeaderStyled ref={header}>
       <div className="header-inner">
+        <Link to="/" className="brand" onClick={closeMenu}>
+          <img src="/logo.png" width={32} height={32} alt="" />
+          <span>Не ChatGPT</span>
+        </Link>
         <button
           ref={toggle}
           type="button"
@@ -137,7 +141,6 @@ export const Header: React.FC = () => {
           data-open={isOpen}
           onBlur={handleBlur}
         >
-          <Link to={'/'}>Главная</Link>
           {/* <Link
             to="/users"
             onClick={closeMenu}
@@ -147,6 +150,14 @@ export const Header: React.FC = () => {
           >
             Пользователи
           </Link> */}
+
+          <Link
+            to="/about"
+            onClick={closeMenu}
+            aria-current={location.pathname === '/about' ? 'page' : undefined}
+          >
+            О проекте
+          </Link>
 
           <SeparatorStyled />
 
@@ -158,8 +169,8 @@ export const Header: React.FC = () => {
           >
             Написать
           </button>
-          {location.pathname === '/ai' ? (
-            <Link to="/ai" className="ai-button" onClick={closeMenu}>
+          {location.pathname === '/' || location.pathname === '/ai' ? (
+            <Link to="/" className="ai-button" onClick={closeMenu}>
               Спросить ИИ <span aria-hidden="true">↗</span>
             </Link>
           ) : (
@@ -171,54 +182,57 @@ export const Header: React.FC = () => {
               Спросить ИИ <span aria-hidden="true">↗</span>
             </button>
           )}
-          {!userLoading &&
-            (user ? (
-              <details className="account-menu" ref={accountMenu}>
-                <summary
-                  aria-label={`Меню пользователя: ${user.fullname || user.username || 'Мой аккаунт'}`}
-                >
-                  <UserAvatar user={user} />
-                  <span className="account-name">
-                    {user.fullname || user.username || 'Мой аккаунт'}
-                  </span>
-                  <svg
-                    className="account-chevron"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
+          {
+            !userLoading &&
+              (user ? (
+                <details className="account-menu" ref={accountMenu}>
+                  <summary
+                    aria-label={`Меню пользователя: ${user.fullname || user.username || 'Мой аккаунт'}`}
                   >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </summary>
-                <div className="account-dropdown">
-                  <p>{user.sudo ? 'Администратор' : 'Мой аккаунт'}</p>
-                  <Link to="/panel/profile" onClick={closeMenu}>
-                    Мой профиль
-                  </Link>
-                  {user.sudo && (
-                    <>
-                      <Link to="/users" onClick={closeMenu}>
-                        Пользователи
-                      </Link>
-                      <Link to="/admin-panel" onClick={closeMenu}>
-                        Админка
-                      </Link>
-                    </>
-                  )}
-                  <SignOutButton variant="ghost" />
-                </div>
-              </details>
-            ) : (
-              <Link className="signin-link" to="/signin" onClick={closeMenu}>
-                Войти
-              </Link>
-            ))}
+                    <UserAvatar user={user} />
+                    <span className="account-name">
+                      {user.fullname || user.username || 'Мой аккаунт'}
+                    </span>
+                    <svg
+                      className="account-chevron"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="m6 9 6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <div className="account-dropdown">
+                    <p>{user.sudo ? 'Администратор' : 'Мой аккаунт'}</p>
+                    <Link to="/panel/profile" onClick={closeMenu}>
+                      Мой профиль
+                    </Link>
+                    {user.sudo && (
+                      <>
+                        <Link to="/users" onClick={closeMenu}>
+                          Пользователи
+                        </Link>
+                        <Link to="/admin-panel" onClick={closeMenu}>
+                          Админка
+                        </Link>
+                      </>
+                    )}
+                    <SignOutButton variant="ghost" />
+                  </div>
+                </details>
+              ) : null)
+            // (
+            //   <Link className="signin-link" to="/signin" onClick={closeMenu}>
+            //     Войти
+            //   </Link>
+            // )
+          }
         </HeaderNavStyled>
       </div>
     </HeaderStyled>

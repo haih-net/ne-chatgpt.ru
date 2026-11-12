@@ -37,6 +37,17 @@ export const CustomLayoutStyled = styled.div`
   flex-direction: column;
   color: ${theme.colors.foreground};
   background: ${theme.backgrounds.page};
+  &[data-full-height='true'] {
+    height: 100dvh;
+    min-height: 0;
+
+    ${CustomLayoutMainStyled} {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+  }
+
   .ai-button {
     display: inline-flex;
     align-items: center;

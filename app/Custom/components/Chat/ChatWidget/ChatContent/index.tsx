@@ -10,9 +10,21 @@ import { ChatInputForm } from '../ChatInputForm'
 import { useChatContext } from '../context'
 import { ChatMessageMemo } from '../ChatMessage'
 
-export const ChatContent: React.FC = () => {
-  const { messages, welcomeTitle, welcomeText, showTypingIndicator } =
-    useChatContext()
+interface ChatContentProps {
+  welcomeTitle?: string
+  welcomeText?: string
+}
+
+export const ChatContent: React.FC<ChatContentProps> = ({
+  welcomeTitle,
+  welcomeText,
+}) => {
+  const {
+    messages,
+    welcomeTitle: contextWelcomeTitle,
+    welcomeText: contextWelcomeText,
+    showTypingIndicator,
+  } = useChatContext()
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   const scrolledMessageIdsRef = useRef(new Set<string>())
@@ -134,8 +146,8 @@ export const ChatContent: React.FC = () => {
         </ChatMessages>
       ) : (
         <WelcomeMessage>
-          <h4>{welcomeTitle}</h4>
-          <p>{welcomeText}</p>
+          <h4>{welcomeTitle ?? contextWelcomeTitle}</h4>
+          <p>{welcomeText ?? contextWelcomeText}</p>
         </WelcomeMessage>
       )}
 

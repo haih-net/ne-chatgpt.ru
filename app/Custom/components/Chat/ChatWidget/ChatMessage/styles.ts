@@ -1,9 +1,16 @@
 import { MarkdownStyled } from 'app/Custom/components/Markdown/styles'
 import { styled } from '@linaria/react'
+import { theme } from '../../../../theme'
 
 export const MessageStyled = styled.div`
-  max-width: 85%;
-  padding: 14px 18px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 12px 14px;
+
+  @media (min-width: ${theme.breakpoints.xs}px) {
+    max-width: 85%;
+    padding: 14px 18px;
+  }
   border-radius: 20px;
   font-size: 0.9375rem;
   line-height: 1.6;
@@ -13,6 +20,23 @@ export const MessageStyled = styled.div`
   color: #1f2937;
   border-bottom-left-radius: 6px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  ${MarkdownStyled} {
+    min-width: 0;
+
+    table {
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-wrap: normal;
+    }
+
+    .katex-display {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+  }
+
   ${MarkdownStyled} img {
     max-width: min(100%, 420px);
     max-height: 420px;

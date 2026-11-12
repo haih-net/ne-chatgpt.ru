@@ -1,8 +1,9 @@
 export const site = {
-  origin: 'http://localhost:3000',
-  name: '',
+  origin: 'https://ne-chatgpt.ru',
+  name: 'Не ChatGPT',
   language: 'ru',
-  description: '',
+  description:
+    'Общение с ИИ без регистрации. Предлагаю начать с вопроса и разобраться в возможностях ИИ на практике.',
 }
 
 // Preserve the identity published at https://fi1osof.ru/about.

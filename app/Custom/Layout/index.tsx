@@ -24,7 +24,7 @@ export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   return (
     <ChatProvider>
-      <CustomLayoutStyled>
+      <CustomLayoutStyled data-full-height={location.pathname === '/'}>
         <a className="skip-link" href="#main-content">
           К содержимому
         </a>
@@ -34,7 +34,9 @@ export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
         </CustomLayoutMainStyled>
         <Footer />
         <FeedbackForm />
-        {location.pathname !== '/ai' && <ChatWidget />}
+        {location.pathname !== '/' && location.pathname !== '/ai' && (
+          <ChatWidget />
+        )}
       </CustomLayoutStyled>
     </ChatProvider>
   )

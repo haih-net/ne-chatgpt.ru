@@ -9,10 +9,11 @@ export const ChatWidgetContainer = styled.div`
 `
 
 export const ChatContentContainer = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   flex: 1;
+  min-width: 0;
   min-height: 0;
-  overflow: auto;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -21,17 +22,11 @@ export const ChatContentContainer = styled.div`
   /* 
     This is so the scroll is inside the container, not the entire view
   */
-  height: 100%;
-  overflow: auto;
-
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: minmax(0, 1fr) auto auto;
   @media (min-width: 768px) {
-    grid-template-rows: minmax(0, 1fr) auto 1fr;
-  }
-  &[data-has-messages='true'] {
-    grid-template-rows: minmax(0, 1fr) auto;
-    align-content: start;
+    &[data-has-messages='false']::after {
+      content: '';
+      flex: 1;
+    }
   }
 `
 
@@ -145,8 +140,15 @@ export const ChatMessages = styled.div`
   flex: 1;
   overflow-y: auto;
   overflow-anchor: none;
-  padding: 24px;
-  padding-bottom: calc(24px + var(--chat-response-space, 0px));
+  min-width: 0;
+  min-height: 0;
+  padding: 16px;
+  padding-bottom: calc(16px + var(--chat-response-space, 0px));
+
+  @media (min-width: ${theme.breakpoints.xs}px) {
+    padding: 24px;
+    padding-bottom: calc(24px + var(--chat-response-space, 0px));
+  }
 
   > * {
     flex-shrink: 0;
@@ -180,12 +182,18 @@ export const ChatInputContainer = styled.div`
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 24px 24px;
+  min-width: 0;
+  padding: 12px 16px 16px;
+
+  @media (min-width: ${theme.breakpoints.xs}px) {
+    padding: 16px 24px 24px;
+  }
   background: transparent;
-  grid-row: 2;
+  flex-shrink: 0;
 `
 
 export const ChatForm = styled.form`
+  min-width: 0;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -209,7 +217,7 @@ export const ChatTextarea = styled.textarea`
   font-family: inherit;
   resize: none;
   min-height: 24px;
-  max-height: 200px;
+  max-height: min(200px, 25dvh);
   line-height: 1.5;
 
   &::placeholder {
@@ -314,8 +322,17 @@ export const TypingIndicator = styled.div`
 `
 
 export const WelcomeMessage = styled.div`
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   text-align: center;
-  padding: 48px 24px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  padding: 24px 16px;
+
+  @media (min-width: ${theme.breakpoints.xs}px) {
+    padding: 48px 24px;
+  }
   color: #6b7280;
   font-size: 1rem;
   line-height: 1.6;
@@ -323,12 +340,11 @@ export const WelcomeMessage = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  grid-row: 1;
 
   h4 {
     color: #1f2937;
     margin: 0 0 12px;
-    font-size: 1.75rem;
+    font-size: clamp(1.375rem, 4vw, 1.75rem);
     font-weight: 600;
   }
 

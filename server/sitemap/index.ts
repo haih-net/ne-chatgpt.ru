@@ -50,7 +50,10 @@ async function generateSitemap(req: Request, res: Response): Promise<void> {
     )
     .whereNot('visibility', 'unpublished')
     .orderBy('updatedAt', 'desc')
-  const xml = generateUrls([{ uri: '/' }, ...concepts], origin)
+  const xml = generateUrls(
+    [{ uri: '/' }, { uri: '/about' }, ...concepts],
+    origin,
+  )
   res.set('Cache-Control', 'no-store').type('application/xml').send(xml)
 }
 

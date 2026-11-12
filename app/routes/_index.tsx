@@ -5,8 +5,9 @@ import { MainPage } from 'app/Custom/pages/MainPage'
 
 export const handle = {
   seo: {
-    title: 'haih.site',
-    description: '',
+    title: 'ИИ онлайн бесплатно и без регистрации — Не ChatGPT',
+    description:
+      'Чат с ИИ на русском языке бесплатно и без регистрации. Задавайте вопросы, создавайте тексты и находите идеи для учёбы, работы и повседневных задач.',
     path: '/',
     image: undefined,
   },
