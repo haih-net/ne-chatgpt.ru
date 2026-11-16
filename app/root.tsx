@@ -80,10 +80,10 @@ export function ErrorBoundary() {
       <h1 tabIndex={-1}>
         {isRouteErrorResponse(error)
           ? `${error.status} ${error.statusText}`
-          : 'Something went wrong'}
+          : 'Не удалось открыть страницу'}
       </h1>
-      <p>Please reload the page to retry.</p>
-      <a href="/">Return home</a>
+      <p>Обновите страницу, чтобы попробовать ещё раз.</p>
+      <a href="/">На главную</a>
     </>
   )
 }

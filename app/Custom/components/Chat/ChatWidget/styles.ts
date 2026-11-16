@@ -341,6 +341,7 @@ export const WelcomeMessage = styled.div`
   align-items: center;
   justify-content: flex-end;
 
+  h1,
   h4 {
     color: #1f2937;
     margin: 0 0 12px;

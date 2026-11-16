@@ -169,7 +169,7 @@ export const Header: React.FC = () => {
           >
             Написать
           </button>
-          {location.pathname === '/' || location.pathname === '/ai' ? (
+          {location.pathname === '/' ? (
             <Link to="/" className="ai-button" onClick={closeMenu}>
               Спросить ИИ <span aria-hidden="true">↗</span>
             </Link>

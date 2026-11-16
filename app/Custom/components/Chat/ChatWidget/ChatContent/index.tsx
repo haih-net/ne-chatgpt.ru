@@ -11,11 +11,13 @@ import { useChatContext } from '../context'
 import { ChatMessageMemo } from '../ChatMessage'
 
 interface ChatContentProps {
+  welcomeHeading?: 'h1' | 'h4'
   welcomeTitle?: string
   welcomeText?: string
 }
 
 export const ChatContent: React.FC<ChatContentProps> = ({
+  welcomeHeading: WelcomeHeading = 'h4',
   welcomeTitle,
   welcomeText,
 }) => {
@@ -146,7 +148,12 @@ export const ChatContent: React.FC<ChatContentProps> = ({
         </ChatMessages>
       ) : (
         <WelcomeMessage>
-          <h4>{welcomeTitle ?? contextWelcomeTitle}</h4>
+          <WelcomeHeading
+            id={WelcomeHeading === 'h1' ? 'chat-title' : undefined}
+            tabIndex={WelcomeHeading === 'h1' ? -1 : undefined}
+          >
+            {welcomeTitle ?? contextWelcomeTitle}
+          </WelcomeHeading>
           <p>{welcomeText ?? contextWelcomeText}</p>
         </WelcomeMessage>
       )}
