@@ -27,6 +27,7 @@ export const ChatContent: React.FC<ChatContentProps> = ({
     welcomeText: contextWelcomeText,
     showTypingIndicator,
   } = useChatContext()
+
   const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   const scrolledMessageIdsRef = useRef(new Set<string>())
@@ -49,6 +50,7 @@ export const ChatContent: React.FC<ChatContentProps> = ({
     const element = Array.from(container.children).find(
       (child) => child.getAttribute('data-message-id') === message.id,
     )
+
     if (!element) {
       return
     }
@@ -86,6 +88,7 @@ export const ChatContent: React.FC<ChatContentProps> = ({
           padding * 2 -
           (lastRect.bottom - messageRect.top),
       )
+
       container.style.setProperty('--chat-response-space', `${space}px`)
       if (!alreadyScrolled) {
         cancelScrollAnimation()
@@ -95,6 +98,7 @@ export const ChatContent: React.FC<ChatContentProps> = ({
           container.getBoundingClientRect().top -
           container.clientTop -
           padding
+
         const startedAt = performance.now()
         const animate = (now: number) => {
           const progress = Math.min((now - startedAt) / 500, 1)
@@ -103,6 +107,7 @@ export const ChatContent: React.FC<ChatContentProps> = ({
           scrollAnimationRef.current =
             progress < 1 ? requestAnimationFrame(animate) : null
         }
+
         scrolledMessageIdsRef.current.add(message.id)
         scrollAnimationRef.current = requestAnimationFrame(animate)
       }

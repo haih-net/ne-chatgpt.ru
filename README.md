@@ -1,5 +1,15 @@
 # HAIH Site
 
+## Индексация звонков и документации
+
+В шаблоне пункты «Видеозвонки» и «Документация» показываются в основном меню только пользователям с `sudo === true`. Страницы `/calls`, `/docs` и их вложенные страницы имеют `noindex` и исключены из sitemap, в том числе при наличии ссылок на них в базе данных.
+
+Включение индексации этих разделов — отдельная задача на конечном проекте. При её выполнении нужно согласованно обновить метаданные страниц, sitemap, видимость меню и соответствующие тесты.
+
+## Язык проекта
+
+Сайт на русском языке. Все пользовательские тексты — интерфейс, пояснения, ошибки, сообщения валидации, подписи доступности, метаданные и документация на сайте — должны быть на русском. Новую документацию и изменения README писать на русском. Идентификаторы кода, имена API, названия технологий и технические обозначения сохраняются в оригинале. Сообщения коммитов пишутся на английском.
+
 **Build better software with AI — by starting from requirements, not frameworks.**
 
 HAIH Site is a public demonstration of requirement-driven development. Instead of adopting tools first and fitting problems to them, we begin with real needs and choose solutions that earn their place.
@@ -468,7 +478,7 @@ Domain validation belongs to the service that owns the operation. The GraphQL ch
 
 The proxy must preserve errors returned before streaming as well as errors carried inside the stream. Interrupted streams must fail instead of returning a successful partial response. Use a transport-specific fallback only when no readable server message is available. Tests must verify the messages received by callers, including missing, blank, and invalid chat tokens and HTTP/stream failures.
 
-README documentation must be written in English.
+Языковые правила сайта, документации и сообщений коммитов приведены в разделе «Язык проекта».
 
 Transport errors raised before the chat returns an HTTP response (such as invalid header characters or a connection failure) are logged in full on the server. The GraphQL caller receives a readable general request error instead of low-level fetch details. Keep the chat token in the Authorization header, not in the JSON request body. Errors returned by the chat itself retain their original messages.
 

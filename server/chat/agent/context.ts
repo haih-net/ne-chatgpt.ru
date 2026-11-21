@@ -52,7 +52,7 @@ export function createAgentContext<S extends AgentStorage>(
 ): AgentRunContext<S> {
   const config: AgentConfig = {
     apiKey: process.env.CHAT_API_KEY,
-    model: process.env.CHAT_MODEL,
+    model: process.env.CHAT_MODEL || 'google/gemini-3.1-flash-lite-preview',
     systemMessage: buildSystemMessage(),
     timeoutMs: 120000,
     toolExplanations:
@@ -62,6 +62,7 @@ export function createAgentContext<S extends AgentStorage>(
     searchTool: process.env.CHAT_WEB_SEARCH_TOOL || 'openrouter:web_search',
     ...input.config,
   }
+
   const baseUrl = process.env.CHAT_API_BASE_URL
   return {
     ...input,

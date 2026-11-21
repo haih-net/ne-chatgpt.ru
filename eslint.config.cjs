@@ -16,6 +16,8 @@ module.exports = [
       'docker/mailserver/mail-state/**',
       'docker/mailserver/mail-logs/**',
       'docker/mailserver/config/**',
+      'docker/codex/home/**',
+      'docker/codex/bin/**',
       'storage/**',
       'uploads/**',
       'project/**',
@@ -79,6 +81,14 @@ module.exports = [
       'react/no-unknown-property': 'off',
       'react/jsx-uses-react': 'off',
       'no-fallthrough': 'error',
+      'padding-line-between-statements': [
+        'error',
+        {
+          blankLine: 'always',
+          prev: ['multiline-const', 'multiline-let', 'multiline-var'],
+          next: '*',
+        },
+      ],
       'no-console': [
         'error',
         {

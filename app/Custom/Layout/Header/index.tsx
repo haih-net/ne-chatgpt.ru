@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type * as React from 'react'
 import { Link, useLocation } from 'react-router'
 import { useOpenChatWithMessage } from '../../components/Chat/hooks/useOpenChatWithMessage'
-import { HeaderNavStyled, HeaderStyled } from './styles'
+import { MessageCircle } from 'lucide-react'
+import { HeaderInnerStyled, HeaderNavStyled, HeaderStyled } from './styles'
 import { SignOutButton } from '../../components/Auth/SignOutButton'
 import { theme } from '../../theme'
 import { useAppContext } from 'app/Custom/components/AppContext'
 import { UserAvatar } from 'app/Custom/components/UserAvatar'
+import { CallsHeader } from 'app/Custom/components/Calls/CallsHeader'
 import { SeparatorStyled } from 'app/Custom/components/Separator/styles'
 
 export const Header: React.FC = () => {
@@ -21,6 +23,7 @@ export const Header: React.FC = () => {
     openFeedback?.()
     setIsOpen(false)
   }, [openFeedback])
+
   const openChat = useOpenChatWithMessage()
   const handleOpenChat = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,6 +39,11 @@ export const Header: React.FC = () => {
       accountMenu.current.open = false
     }
   }, [])
+
+  useEffect(() => {
+    closeMenu()
+  }, [location.key, closeMenu])
+
   const toggleMenu = useCallback(() => setIsOpen((previous) => !previous), [])
   const handleBlur = useCallback((event: React.FocusEvent<HTMLElement>) => {
     if (
@@ -56,6 +64,7 @@ export const Header: React.FC = () => {
         toggle.current?.focus()
       }
     }
+
     const onPointer = (event: PointerEvent) => {
       if (
         event.target instanceof Node &&
@@ -64,12 +73,14 @@ export const Header: React.FC = () => {
         setIsOpen(false)
       }
     }
+
     const media = window.matchMedia(`(min-width: ${theme.breakpoints.sm}px)`)
     const onResize = () => {
       if (media.matches) {
         setIsOpen(false)
       }
     }
+
     document.addEventListener('keydown', onKey)
     document.addEventListener('pointerdown', onPointer)
     media.addEventListener('change', onResize)
@@ -90,12 +101,14 @@ export const Header: React.FC = () => {
         accountMenu.current.open = false
       }
     }
+
     const onEscape = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && accountMenu.current?.open) {
         accountMenu.current.open = false
         accountMenu.current.querySelector('summary')?.focus()
       }
     }
+
     document.addEventListener('pointerdown', closeAccount)
     document.addEventListener('keydown', onEscape)
     return () => {
@@ -106,41 +119,39 @@ export const Header: React.FC = () => {
 
   return (
     <HeaderStyled ref={header}>
-      <div className="header-inner">
-        <Link to="/" className="brand" onClick={closeMenu}>
+      <HeaderInnerStyled>
+        <Link to="/" className="brand" title="На главную" onClick={closeMenu}>
           <img src="/logo.png" width={32} height={32} alt="" />
           <span>Не ChatGPT</span>
         </Link>
-        <button
-          ref={toggle}
-          type="button"
-          className="menu-toggle"
-          aria-label={isOpen ? 'Закрыть меню' : 'Открыть меню'}
-          aria-expanded={isOpen}
-          aria-controls="main-navigation"
-          onClick={toggleMenu}
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
-            <path
-              d={isOpen ? 'M18 6 6 18M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-            />
-          </svg>
-        </button>
         <HeaderNavStyled
           id="main-navigation"
           aria-label="Основная навигация"
           data-open={isOpen}
           onBlur={handleBlur}
         >
+          {user?.sudo === true && (
+            <>
+              <Link
+                to="/calls"
+                onClick={closeMenu}
+                aria-current={
+                  location.pathname.startsWith('/calls') ? 'page' : undefined
+                }
+              >
+                Видеозвонки
+              </Link>
+              <Link
+                to="/docs"
+                onClick={closeMenu}
+                aria-current={
+                  location.pathname.startsWith('/docs') ? 'page' : undefined
+                }
+              >
+                Документация
+              </Link>
+            </>
+          )}
           {/* <Link
             to="/users"
             onClick={closeMenu}
@@ -167,7 +178,8 @@ export const Header: React.FC = () => {
             onClick={handleFeedback}
             disabled={!openFeedback}
           >
-            Написать
+            <MessageCircle size={16} aria-hidden="true" />
+            Написать мне
           </button>
           {location.pathname === '/' ? (
             <Link to="/" className="ai-button" onClick={closeMenu}>
@@ -234,7 +246,32 @@ export const Header: React.FC = () => {
             // )
           }
         </HeaderNavStyled>
-      </div>
+        <CallsHeader />
+        <button
+          ref={toggle}
+          type="button"
+          className="menu-toggle"
+          aria-label={isOpen ? 'Закрыть меню' : 'Открыть меню'}
+          aria-expanded={isOpen}
+          aria-controls="main-navigation"
+          onClick={toggleMenu}
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path
+              d={isOpen ? 'M18 6 6 18M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+            />
+          </svg>
+        </button>
+      </HeaderInnerStyled>
     </HeaderStyled>
   )
 }

@@ -1,6 +1,7 @@
 import '../env.ts'
 import { mkdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
+import { setTimeout as delay } from 'node:timers/promises'
 import type { Database } from 'better-sqlite3'
 import knex, { type Knex } from 'knex'
 import { initializeSchema } from './schema.ts'
@@ -48,6 +49,7 @@ export function createDatabase(): Knex {
     loadExtensions: ['.mjs'],
     extension: 'mjs',
   }
+
   if (client === 'pg') {
     if (!process.env.DATABASE_URL) {
       throw new Error('DATABASE_URL is required for PostgreSQL')
@@ -134,6 +136,7 @@ export async function ensureDatabase(database: Knex): Promise<void> {
 
   const connection = database.client
     .connectionSettings as Knex.PgConnectionConfig
+
   const name = connection.database || connection.user
   if (!name) {
     throw new Error('Specify the PostgreSQL database name in DATABASE_URL')
@@ -149,6 +152,7 @@ export async function ensureDatabase(database: Knex): Promise<void> {
     pool: { min: 0, max: 1 },
     acquireConnectionTimeout: 10000,
   })
+
   try {
     // Quote a single database identifier, including names with dots or quotes.
     await maintenance.raw(`CREATE DATABASE "${name.replaceAll('"', '""')}"`)
@@ -174,7 +178,39 @@ export async function migrateDatabase(
   database: Knex,
 ): Promise<[number, string[]]> {
   await ensureDatabase(database)
-  return database.migrate.latest()
+  if (database.client.config.client !== 'better-sqlite3') {
+    return database.migrate.latest()
+  }
+  const deadline = Date.now() + 10000
+  for (;;) {
+    try {
+      // Knex disables response processing on the client used for migrations.
+      const migrationDatabase = database.withUserParams({
+        ...database.userParams,
+      })
+
+      return await migrationDatabase.transaction(async (trx) => {
+        // Serialize bootstrap too: Knex creates its metadata before taking its lock.
+        await trx.raw(
+          'CREATE TABLE IF NOT EXISTS database_migration_lock (id INTEGER PRIMARY KEY)',
+        )
+        await trx.raw(
+          'INSERT OR IGNORE INTO database_migration_lock (id) VALUES (1)',
+        )
+        return trx.migrate.latest()
+      })
+    } catch (error) {
+      const code = databaseErrorCode(error)
+      if (
+        (code !== 'SQLITE_BUSY' && code !== 'SQLITE_BUSY_SNAPSHOT') ||
+        Date.now() >= deadline
+      ) {
+        throw error
+      }
+      // Restart the transaction if another writer invalidated its read snapshot.
+      await delay(50)
+    }
+  }
 }
 
 export const db: Knex = createDatabase()

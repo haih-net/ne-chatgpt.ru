@@ -1,3 +1,4 @@
+import { TextField } from '../../controls/TextField'
 import React, { useCallback, useId, useRef, useState } from 'react'
 import {
   Controller,
@@ -33,6 +34,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
     reValidateMode: 'onChange',
     resolver: yupResolver(signInSchema),
   })
+
   const [certificatePending, setCertificatePending] = useState(false)
   const disabled = loading || certificatePending || form.formState.isSubmitting
 
@@ -50,6 +52,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
             data: { password },
           },
         })
+
         const response = data?.response
         if (!response?.success || !response.token) {
           setError('Неверный логин или пароль.')
@@ -81,12 +84,14 @@ export const SignInForm: React.FC<SignInFormProps> = ({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ force }),
         })
+
         const result = await response.json()
         if (!response.ok) {
           throw new Error(result.message)
         }
         return result
       }
+
       let result = await request(false)
       if (result.kind === 'confirm') {
         if (
@@ -125,7 +130,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({
           <label htmlFor={fieldId}>
             {isPassword ? 'Пароль' : 'Логин или электронная почта'}
           </label>
-          <input
+          <TextField
             {...field}
             id={fieldId}
             type={isPassword ? 'password' : 'text'}

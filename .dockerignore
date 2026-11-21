@@ -1,10 +1,11 @@
-server/database/data
-storage
-uploads
 node_modules
-build
 .git
 .react-router
+
+/server/database/data
+/storage
+/uploads
+/build
 
 docker/monitoring/.secrets
 docker/monitoring/alertmanager/generated.json
@@ -21,4 +22,6 @@ docker/traefik/logs
 # Mailserver runtime state and accounts must not enter application images.
 docker/mailserver
 
-docker/supabase/data/
+docker/supabase/data
+
+/docker/codex

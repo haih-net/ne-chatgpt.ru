@@ -1,4 +1,22 @@
 User-agent: *
 Allow: /
+Disallow: /calls$
+Disallow: /calls?
+Disallow: /calls/
+Disallow: /docs$
+Disallow: /docs?
+Disallow: /docs/
+Disallow: /signin$
+Disallow: /signin?
+Disallow: /signin/
+Disallow: /signup$
+Disallow: /signup?
+Disallow: /signup/
+Disallow: /panel$
+Disallow: /panel?
+Disallow: /panel/
+Disallow: /admin-panel$
+Disallow: /admin-panel?
+Disallow: /admin-panel/
 
 Sitemap: https://ne-chatgpt.ru/sitemap.xml

@@ -43,7 +43,7 @@ export const HtmlStyled = styled.html`
     max-width: 100%;
   }
   :where(&) a {
-    color: inherit;
+    color: ${theme.colors.link};
     text-decoration: none;
   }
   :where(&) a:hover {

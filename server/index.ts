@@ -1,8 +1,10 @@
 import './env'
+import { setupCallSignaling } from './schema/types/CallRoom/helpers/setupCallSignaling'
 import { db, migrateDatabase } from './database'
 import express, { type ErrorRequestHandler } from 'express'
 import { logDevError } from './errorLogging'
 import { setupChat } from './chat'
+import { setupCodexChat } from './codex'
 import { createServer } from 'node:http'
 import { listen, getServerUrls } from './listen'
 import { resolve } from 'node:path'
@@ -22,6 +24,7 @@ const dev = process.env.NODE_ENV === 'development'
 
 let stopGraphql: (() => Promise<void>) | null = null
 let vite: ViteDevServer | null = null
+let stopCalls: (() => void) | null = null
 let stopping = false
 let metricsServer: ReturnType<typeof startMetricsServer> = null
 
@@ -39,6 +42,7 @@ function setupShutdown(server: ReturnType<typeof createServer>) {
 
     try {
       metricsServer?.close()
+      stopCalls?.()
 
       if (stopGraphql) {
         await stopGraphql()
@@ -71,12 +75,14 @@ async function startServer() {
   setupClientCertificate(app, db)
   setupSitemap(app)
   setupChat({ app, storage: undefined })
+  setupCodexChat(app)
 
   app.use('/images/resized/', imageResizerMiddleware)
   app.use('/assets/images/', imageResizerMiddleware)
   setupMedia(app)
 
   const httpServer = createServer(app)
+  stopCalls = setupCallSignaling(httpServer, db)
 
   // GraphQL middleware
   stopGraphql = await setupGraphqlMiddleware(app, httpServer)
@@ -117,6 +123,7 @@ async function startServer() {
     const buildUrl: string = pathToFileURL(
       resolve('build/server/index.js'),
     ).href
+
     const build: ServerBuild = (await import(buildUrl)) as ServerBuild
     app.all('/{*splat}', createRequestHandler({ build }))
   }
@@ -125,6 +132,7 @@ async function startServer() {
     logDevError('http.error', error, { method: req.method, path: req.path })
     next(error)
   }
+
   app.use(logRequestError)
 
   metricsServer = startMetricsServer()

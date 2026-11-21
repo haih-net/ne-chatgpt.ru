@@ -1,20 +1,24 @@
-server/database/data
-storage
-uploads
 generated
+
+/server/database/data
+/storage
+/uploads
+/project
 /node_modules
 /build
 /.react-router
 /storybook-static
-package-lock.json
 
-coverage/
-playwright-report/
-test-results/
+/coverage
+/playwright-report
+/test-results
 
-docker/mailserver/mail-data/
-docker/mailserver/mail-state/
-docker/mailserver/mail-logs/
-docker/mailserver/config/
+/docker/mailserver/mail-data
+/docker/mailserver/mail-state
+/docker/mailserver/mail-logs
+/docker/mailserver/config
 
-docker/supabase/data/
+/docker/supabase/data
+
+/docker/codex/home
+/docker/codex/bin

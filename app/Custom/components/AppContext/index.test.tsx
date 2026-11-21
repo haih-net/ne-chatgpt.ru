@@ -29,6 +29,7 @@ describe('shared application context', () => {
         <Consumer />
       </AppContextProvider>,
     )
+
     expect(screen.getByText('loading')).toBeTruthy()
     view.rerender(
       <AppContextProvider
@@ -62,6 +63,7 @@ describe('shared application context', () => {
                   me: {
                     __typename: 'User',
                     id: 'owner',
+                    email: null,
                     username: 'owner',
                     fullname: 'Owner',
                     sudo: false,
@@ -84,6 +86,7 @@ describe('shared application context', () => {
           }),
       ),
     })
+
     vi.mocked(useApollo).mockReturnValue(client)
     try {
       render(

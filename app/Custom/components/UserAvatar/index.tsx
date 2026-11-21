@@ -5,7 +5,7 @@ import { UserAvatarStyled } from './styles'
 
 type UserAvatarProps = {
   user?: Pick<UserNoNestingFragment, 'image' | 'fullname' | 'username'>
-  size?: number
+  size?: number | 'inherit'
   src?: string | null
 }
 
@@ -24,7 +24,11 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 
   return (
     <UserAvatarStyled
-      style={{ width: size, height: size, fontSize: Math.max(14, size / 2.75) }}
+      style={{
+        width: size === 'inherit' ? '100%' : size,
+        height: size === 'inherit' ? '100%' : size,
+        fontSize: size === 'inherit' ? 'inherit' : Math.max(14, size / 2.75),
+      }}
       aria-hidden="true"
     >
       {image ? <img src={image} alt="" /> : name.slice(0, 1).toUpperCase()}

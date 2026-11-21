@@ -1,3 +1,4 @@
+import { Select } from 'app/Custom/components/controls/Select'
 import React, { useCallback, useState } from 'react'
 import { Button } from 'app/Custom/components/Button'
 import {
@@ -16,6 +17,7 @@ export const ErrorList: React.FC = () => {
     variables: { sort },
     fetchPolicy: 'network-only',
   })
+
   const [update, { loading: updating }] = useUpdatePageErrorMutation()
   const [clear, { loading: clearing }] = useClearResolvedPageErrorsMutation()
   const busy = loading || updating || clearing
@@ -27,11 +29,13 @@ export const ErrorList: React.FC = () => {
       setActionError('Could not refresh the error log.')
     }
   }, [refetch])
+
   const changeStatus = useCallback(
     async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
       const row = data?.pageErrors.find(
         (entry) => entry.url === event.currentTarget.dataset.url,
       )
+
       if (!row) {
         return
       }
@@ -57,6 +61,7 @@ export const ErrorList: React.FC = () => {
     },
     [data, update, refetch],
   )
+
   const clearResolved = useCallback(async (): Promise<void> => {
     setActionError('')
     setNotice('')
@@ -70,26 +75,28 @@ export const ErrorList: React.FC = () => {
       setActionError('Could not clear resolved records or refresh the list.')
     }
   }, [clear, refetch])
-  const changeSort = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>): void => {
-      setSort(
-        event.target.value === PageErrorSort.URL
-          ? PageErrorSort.URL
-          : PageErrorSort.LASTOCCURREDAT,
-      )
-    },
-    [],
-  )
+
+  const changeSort = useCallback((value: string | null): void => {
+    setSort(
+      value === PageErrorSort.URL
+        ? PageErrorSort.URL
+        : PageErrorSort.LASTOCCURREDAT,
+    )
+  }, [])
+
   return (
     <>
       <div className="toolbar">
-        <label>
-          Sort by{' '}
-          <select value={sort} disabled={busy} onChange={changeSort}>
-            <option value={PageErrorSort.URL}>URL</option>
-            <option value={PageErrorSort.LASTOCCURREDAT}>Latest error</option>
-          </select>
-        </label>
+        <Select
+          label="Sort by"
+          value={sort}
+          disabled={busy}
+          onChange={changeSort}
+          options={[
+            { id: PageErrorSort.URL, text: 'URL' },
+            { id: PageErrorSort.LASTOCCURREDAT, text: 'Latest error' },
+          ]}
+        />
         <Button disabled={busy} onClick={refresh}>
           Refresh
         </Button>
