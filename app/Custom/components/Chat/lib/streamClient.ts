@@ -114,7 +114,7 @@ export const CHAT_TOKEN_STORAGE_KEY = isCodexChat
   ? 'codex_chat_access_token'
   : 'chat_access_token'
 
-const getChatToken = async (signal?: AbortSignal): Promise<string> => {
+export const getChatToken = async (signal?: AbortSignal): Promise<string> => {
   const existing = localStorage.getItem(CHAT_TOKEN_STORAGE_KEY)
   if (existing) {
     return existing

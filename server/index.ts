@@ -4,7 +4,8 @@ import { db, migrateDatabase } from './database'
 import express, { type ErrorRequestHandler } from 'express'
 import { logDevError } from './errorLogging'
 import { setupChat } from './chat'
-import { setupCodexChat } from './codex'
+import { setupCodexChat, activeCodexSessions } from './codex'
+import { setupCodexRealtime } from './codex/realtime'
 import { createServer } from 'node:http'
 import { listen, getServerUrls } from './listen'
 import { resolve } from 'node:path'
@@ -25,6 +26,7 @@ const dev = process.env.NODE_ENV === 'development'
 let stopGraphql: (() => Promise<void>) | null = null
 let vite: ViteDevServer | null = null
 let stopCalls: (() => void) | null = null
+let stopVoice: (() => void) | null = null
 let stopping = false
 let metricsServer: ReturnType<typeof startMetricsServer> = null
 
@@ -43,6 +45,7 @@ function setupShutdown(server: ReturnType<typeof createServer>) {
     try {
       metricsServer?.close()
       stopCalls?.()
+      stopVoice?.()
 
       if (stopGraphql) {
         await stopGraphql()
@@ -83,6 +86,7 @@ async function startServer() {
 
   const httpServer = createServer(app)
   stopCalls = setupCallSignaling(httpServer, db)
+  stopVoice = setupCodexRealtime(httpServer, activeCodexSessions)
 
   // GraphQL middleware
   stopGraphql = await setupGraphqlMiddleware(app, httpServer)

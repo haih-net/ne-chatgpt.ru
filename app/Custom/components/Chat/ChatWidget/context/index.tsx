@@ -15,6 +15,7 @@ import { recordStatistics } from 'app/components/Statistics'
 import { useLocation } from 'react-router'
 
 export type ChatContextValue = {
+  upsertVoiceMessage: (id: string, text: string, isUser: boolean) => void
   technicalEvents: CodexStreamEvent[]
   messages: ChatMessage[]
   isLoading: boolean
@@ -68,6 +69,19 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
   const [isLoading, setIsLoading] = useState(false)
   const [showTypingIndicator, setShowTypingIndicator] = useState(false)
   const [initialMessage, initialMessageSetter] = useState('')
+
+  const upsertVoiceMessage = useCallback(
+    (id: string, text: string, isUser: boolean): void => {
+      setMessages((previous) =>
+        previous.some((message) => message.id === id)
+          ? previous.map((message) =>
+              message.id === id ? { ...message, text } : message,
+            )
+          : [...previous, { id, text, isUser }],
+      )
+    },
+    [],
+  )
 
   const sessionIdRef = useRef<string | null>(null)
 
@@ -322,6 +336,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
 
   const value = useMemo<ChatContextValue>(
     () => ({
+      upsertVoiceMessage,
       messages,
       technicalEvents,
       isLoading,
@@ -342,6 +357,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({
       initialMessageSetter,
     }),
     [
+      upsertVoiceMessage,
       messages,
       technicalEvents,
       isLoading,

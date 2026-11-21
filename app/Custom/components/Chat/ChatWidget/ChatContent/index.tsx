@@ -11,12 +11,16 @@ import { useChatContext } from '../context'
 import { ChatMessageMemo } from '../ChatMessage'
 
 interface ChatContentProps {
+  controls?: React.ReactNode
+  voiceActive?: boolean
   welcomeHeading?: 'h1' | 'h4'
   welcomeTitle?: string
   welcomeText?: string
 }
 
 export const ChatContent: React.FC<ChatContentProps> = ({
+  controls,
+  voiceActive = false,
   welcomeHeading: WelcomeHeading = 'h4',
   welcomeTitle,
   welcomeText,
@@ -164,7 +168,8 @@ export const ChatContent: React.FC<ChatContentProps> = ({
       )}
 
       <ChatInputContainer data-testid="chat-footer">
-        <ChatInputForm />
+        {!voiceActive && <ChatInputForm />}
+        {controls}
       </ChatInputContainer>
     </ChatContentContainer>
   )

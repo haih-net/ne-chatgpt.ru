@@ -7,8 +7,10 @@ import { issueSessionToken, verifySessionToken } from './helpers/sessionToken'
 import { createChatResponse } from '../chat/http/response'
 import { logDevError } from '../errorLogging'
 
+export const activeCodexSessions: Set<string> = new Set()
+
 export function setupCodexChat(app: Express): void {
-  const active = new Set<string>()
+  const active = activeCodexSessions
   const router = express.Router()
   router.use(express.json({ limit: '256kb' }))
   router.use((_req, res, next) => {
@@ -61,7 +63,7 @@ export function setupCodexChat(app: Express): void {
     let turnId: string | undefined
     let completed = false
     try {
-      client = await connectCodex()
+      client = await connectCodex(() => threadId)
       controller.signal.throwIfAborted()
       threadId = (await readSessionThread(sessionId)) ?? undefined
       if (threadId) {

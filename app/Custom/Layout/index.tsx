@@ -5,8 +5,12 @@ import { ChatProvider } from '../components/Chat/ChatWidget/context'
 import { ChatWidget } from '../components/Chat/ChatWidget'
 import { FeedbackForm } from '../components/Feedback'
 import { Header } from './Header'
-import { Footer } from './Footer'
-import { CustomLayoutMainStyled, CustomLayoutStyled } from './styles'
+import {
+  CustomLayoutMainStyled,
+  CustomLayoutStyled,
+  LayoutBodyStyled,
+  LayoutTopbarStyled,
+} from './styles'
 
 export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const location = useLocation()
@@ -29,10 +33,14 @@ export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
           К содержимому
         </a>
         <Header />
-        <CustomLayoutMainStyled id="main-content" tabIndex={-1}>
-          {children}
-        </CustomLayoutMainStyled>
-        <Footer />
+        <LayoutBodyStyled>
+          <LayoutTopbarStyled>
+            Помощник <span>Не ChatGPT</span>
+          </LayoutTopbarStyled>
+          <CustomLayoutMainStyled id="main-content" tabIndex={-1}>
+            {children}
+          </CustomLayoutMainStyled>
+        </LayoutBodyStyled>
         <FeedbackForm />
         {location.pathname !== '/' && <ChatWidget />}
       </CustomLayoutStyled>

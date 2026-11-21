@@ -10,6 +10,7 @@ import { useAppContext } from 'app/Custom/components/AppContext'
 import { UserAvatar } from 'app/Custom/components/UserAvatar'
 import { CallsHeader } from 'app/Custom/components/Calls/CallsHeader'
 import { SeparatorStyled } from 'app/Custom/components/Separator/styles'
+import { HEADER_AI_BUTTON } from './interfaces'
 
 export const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -119,8 +120,23 @@ export const Header: React.FC = () => {
 
   return (
     <HeaderStyled ref={header}>
+      {isOpen && (
+        <button
+          className="menu-scrim"
+          type="button"
+          aria-label="Закрыть навигацию"
+          tabIndex={-1}
+          onClick={closeMenu}
+        />
+      )}
       <HeaderInnerStyled>
-        <Link to="/" className="brand" title="На главную" onClick={closeMenu}>
+        <Link
+          to="/"
+          className="brand"
+          aria-label="На главную"
+          title="На главную"
+          onClick={closeMenu}
+        >
           <img src="/logo.png" width={32} height={32} alt="" />
           <span>Не ChatGPT</span>
         </Link>
@@ -181,7 +197,7 @@ export const Header: React.FC = () => {
             <MessageCircle size={16} aria-hidden="true" />
             Написать мне
           </button>
-          {location.pathname === '/' ? (
+          {!HEADER_AI_BUTTON ? null : location.pathname === '/' ? (
             <Link to="/" className="ai-button" onClick={closeMenu}>
               Спросить ИИ <span aria-hidden="true">↗</span>
             </Link>

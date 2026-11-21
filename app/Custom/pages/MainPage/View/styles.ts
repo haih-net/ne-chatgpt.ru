@@ -7,6 +7,6 @@ export const MainPageViewStyled = styled.section`
   min-height: 0;
   min-width: 0;
   width: 100%;
-  max-width: 1200px;
+  max-width: none;
   margin: 0 auto;
 `
